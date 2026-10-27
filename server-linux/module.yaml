@@ -1,0 +1,9 @@
+product:
+  type: linux/app
+  platforms: [linuxArm64]
+settings:
+  kotlin:
+    version: 2.4.10
+dependencies:
+  - ../core
+  - io.ktor:ktor-client-curl:3.5.2

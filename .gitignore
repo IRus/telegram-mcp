@@ -1,0 +1,10 @@
+/build/
+/.kotlin/
+/.idea/
+*.log
+.env
+.env.*
+!.env.example
+/dist/
+/secrets/
+.DS_Store

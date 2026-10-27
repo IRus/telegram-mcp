@@ -1,0 +1,4 @@
+modules:
+  - core
+  - server-linux
+  - server-macos
