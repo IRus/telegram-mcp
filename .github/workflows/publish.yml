@@ -14,9 +14,37 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  linux-arm64:
-    runs-on: ubuntu-24.04-arm
+  build-native:
+    runs-on: macos-15
     timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: Heapy/setup-ktc@e0a603c477110083db0b44f302deb188d4991ea0 # v1.1.0
+        with:
+          version: auto
+      - name: Test macOS ARM64
+        uses: Heapy/ktc-check@2f2dea35c8738d5c14446c56fe23da2d37aa1796 # v1.1.1
+        with:
+          modules: core
+          platforms: macosArm64
+          checks: tests
+          command-timeout-minutes: 30
+      - name: Build native executable
+        run: ./build-image.sh
+      - name: Upload Linux ARM64 executable
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: linux-arm64-executable
+          path: dist/telegram-mcp
+          if-no-files-found: error
+          retention-days: 7
+
+  linux-arm64:
+    needs: build-native
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
     permissions:
       contents: read
       packages: write
@@ -26,18 +54,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: Heapy/setup-ktc@e0a603c477110083db0b44f302deb188d4991ea0 # v1.1.0
+      - name: Download Linux ARM64 executable
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          version: auto
-      - name: Test Linux ARM64
-        uses: Heapy/ktc-check@2f2dea35c8738d5c14446c56fe23da2d37aa1796 # v1.1.1
-        with:
-          modules: core
-          platforms: linuxArm64
-          checks: tests
-          command-timeout-minutes: 30
-      - name: Build native executable
-        run: ./build-image.sh
+          name: linux-arm64-executable
+          path: dist
       - name: Build container
         run: docker build --label "org.opencontainers.image.revision=$GITHUB_SHA" --tag "$IMAGE:sha-$GITHUB_SHA" .
       - name: Smoke-test packaged server

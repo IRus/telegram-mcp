@@ -106,14 +106,12 @@ include the hostname, not the signed URL, file ID, token, or contents.
 ## Development
 
 The wrapper pins Kotlin Toolchain 0.12.2. Modules are `core`, `server-linux`, and
-`server-macos`; development/testing supports macOS ARM64 and Linux ARM64.
+`server-macos`; tests and cross-compilation run on macOS ARM64. Linux ARM64 is the container
+runtime target; the pinned Toolchain does not provide a compiler for that host.
 
 ```sh
 # On macOS ARM64:
 ./kotlin test -m core -p macosArm64
-
-# On Linux ARM64:
-./kotlin test -m core -p linuxArm64
 
 # Produce an optimized Linux ARM64 executable in dist/:
 ./build-image.sh
@@ -123,8 +121,9 @@ docker build -t telegram-mcp:local .
 ./scripts/smoke-test.sh telegram-mcp:local
 ```
 
-CI runs the Linux ARM64 tests, builds the executable and image, then checks
-health and unauthenticated MCP rejection without network access. Only a
+CI runs the tests and cross-compiles the executable on macOS ARM64, then
+builds and checks the container on Linux ARM64. Container health and
+unauthenticated MCP rejection are checked without network access. Only a
 successful main-branch build publishes to GHCR, using `GITHUB_TOKEN`.
 The published image is the same image that passed the container smoke test.
 The tests use mock transports and do not send real Telegram messages.
