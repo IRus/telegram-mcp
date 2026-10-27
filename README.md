@@ -105,7 +105,7 @@ include the hostname, not the signed URL, file ID, token, or contents.
 
 ## Development
 
-The wrapper pins Kotlin Toolchain 0.12.2. Modules are `core`, `server-linux`, and
+The wrapper pins Kotlin Toolchain 0.13.0. Modules are `core`, `server-linux`, and
 `server-macos`; tests and cross-compilation run on macOS ARM64. Linux ARM64 is the container
 runtime target; the pinned Toolchain does not provide a compiler for that host.
 

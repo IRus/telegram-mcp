@@ -3,16 +3,18 @@ product:
   platforms: [linuxArm64, macosArm64]
 settings:
   kotlin:
-    version: 2.4.10
-    serialization: json
+    version: 2.4.21
+    serialization:
+      format: json
+      version: 1.12.0
   ktor:
-    version: 3.5.2
+    version: 3.6.0
 dependencies:
   - io.modelcontextprotocol:kotlin-sdk-server:0.15.0
-  - io.ktor:ktor-server-cio:3.5.2
-  - io.ktor:ktor-client-core:3.5.2
+  - io.ktor:ktor-server-cio:3.6.0
+  - io.ktor:ktor-client-core:3.6.0
   - dev.whyoleg.cryptography:cryptography-core:0.6.0
   - dev.whyoleg.cryptography:cryptography-provider-optimal:0.6.0
 test-dependencies:
-  - io.ktor:ktor-server-test-host:3.5.2
-  - io.ktor:ktor-client-mock:3.5.2
+  - io.ktor:ktor-server-test-host:3.6.0
+  - io.ktor:ktor-client-mock:3.6.0
